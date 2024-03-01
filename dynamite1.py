@@ -1,1 +1,3 @@
-BLAST "YEAH SCIENCE! BITCH!"
+LABEL loop
+BLAST "hello, world!"
+GOTO loop

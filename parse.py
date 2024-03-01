@@ -72,29 +72,32 @@ class Parser:
             self.match(TokenType.ENDWHILE)
 
 
-
         elif self.checkToken(TokenType.LABEL):
             print("STATEMENT-LABEL")
             self.nextToken()
             self.match(TokenType.IDENT)
-            self.nl()
+
 
         elif self.checkToken(TokenType.GOTO):
             print("STATEMENT-GOTO")
             self.nextToken()
             self.match(TokenType.IDENT)
-            self.nl()
+
 
         elif self.checkToken(TokenType.LET):
             print("STATEMENT-LET")
             self.nextToken()
             self.match(TokenType.IDENT)
+            self.match(TokenType.EQ)
+            self.expression()
 
-            if self.checkToken(TokenType.EQ):
-                self.expression()
+        elif self.checkToken(TokenType.INPUT):
+            print("STATEMENT-INPUT")
+            self.nextToken()
+            self.match(TokenType.IDENT)
 
-            self.nl()
-
+        else:
+            self.abort("Invalid statement at " + self.curToken.token + " (" + self.curToken.kind.name + ")")
 
         self.nl()
 
@@ -110,3 +113,14 @@ class Parser:
         self.match(TokenType.NEWLINE)
         while self.checkToken(TokenType.NEWLINE):
             self.nextToken()
+
+    def program(self):
+        print("PROGRAM")
+
+        # Since some newlines are required in our grammar, need to skip the excess.
+        while self.checkToken(TokenType.NEWLINE):
+            self.nextToken()
+
+        # Parse all the statements in the program.
+        while not self.checkToken(TokenType.EOF):
+            self.statement()
